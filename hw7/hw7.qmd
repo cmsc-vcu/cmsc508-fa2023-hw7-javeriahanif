@@ -1,0 +1,229 @@
+---
+title: Homework 7 - Creating a resume database
+author: (your name goes here!)
+date: last-modified
+format:
+    html:
+        theme: cosmo
+        toc: true
+        embed-resources: true
+        code-copy: true
+---
+
+(include a brief description of what is in this document)
+
+(Please clean up any comments that I included.  This is a scaffold document.)
+
+GITHUB URL:  <your URL goes here!>
+
+```{python}
+#| eval: true
+#| echo: false
+import os
+import sys
+import pandas as pd
+from tabulate import tabulate
+from dotenv import load_dotenv
+from sqlalchemy import create_engine, text
+from sqlalchemy.exc import OperationalError, ProgrammingError
+from IPython.display import display, Markdown
+```
+```{python}
+#| eval: true
+#| echo: false
+
+# modify config_map to reflect credentials needed by this program
+config_map = {
+    'user':'CMSC508_USER',
+    'password':'CMSC508_PASSWORD',
+    'host':'CMSC508_HOST',
+    'database':'HW7_DB_NAME'
+}
+# load and store credentials
+load_dotenv()
+config = {}
+for key in config_map.keys():
+    config[key] = os.getenv(config_map[key])
+flag = False
+for param in config.keys():
+    if config[param] is None:
+        flag = True
+        print(f"Missing {config_map[param]} in .env file")
+#if flag:
+#    sys.exit(1)
+```
+```{python}
+#| eval: true
+#| echo: false
+
+# build a sqlalchemy engine string
+engine_uri = f"mysql+pymysql://{config['user']}:{config['password']}@{config['host']}/{config['database']}"
+
+# create a database connection.  THIS IS THE ACTUAL CONNECTION!
+try:
+    cnx = create_engine(engine_uri)
+except ArgumentError as e:
+    print(f"create_engine: Argument Error: {e}")
+    #sys.exit(1)
+except NoSuchModuleError as e:
+    print(f"create_engine: No Such Module Error: {e}")
+    #sys.exit(1)
+except Exception as e:
+    print(f"create_engine: An error occurred: {e}")
+    #sys.exit(1)
+```
+```{python}
+#| echo: false
+#| eval: true
+
+# Do a quick test of the connection and trap the errors better!
+try:
+    databases = pd.read_sql("show databases",cnx)
+except ImportError as e:
+    print(f"Error: {e}")
+except OperationalError as e:
+    print(f"Database/SQL Error:\n{str(e)}\n")
+except ProgrammingError as e:
+    print(f"Programming Error:\n{str(e)}\n")
+except Exception as e:
+    print(f"An error occurred:\n{str(e)}\n")
+
+```
+
+## Overview and description
+
+(briefly describe the project and the database)
+
+## Crows-foot diagram
+
+(add a description of the diagram and what the reader is seeing.)
+
+```{mermaid}
+%%| echo: false
+erDiagram
+    CUSTOMER ||--o{ ORDER : places
+    CUSTOMER }|..|{ DELIVERY-ADDRESS : uses
+    CUSTOMER{
+        int id
+        string first_name
+        string last_name
+    }
+    DELIVERY-ADDRESS {
+        int id
+    }
+```
+
+## Examples of data in the database
+
+For the people, skills, and roles tables, provide a description of each table and it's contents. Then provide a listing of the entire table.
+
+### People table
+
+The *people* table contains elements that describe ... 
+
+Below is a list of data in the *people* table.
+
+```{python}
+#| echo: false
+#| eval: true
+sql = f"""
+select * from people;
+"""
+## Add code to list roles table here
+try:
+    df = pd.read_sql(sql,cnx)
+    df
+except Exception as e:
+    message = str(e)
+    print(f"An error occurred:\n\n{message}\n\nIgnoring and moving on.")
+    df = pd.DataFrame()
+df
+```
+
+### Skills table
+
+The *skills* table contains elements that describe ... 
+
+Below is a list of data in the *skills* table.
+
+```{python}
+#| echo: false
+#| eval: true
+
+## Add code to list roles table here
+```
+
+### Roles table
+
+The *roles* table contains elements that describe ... 
+
+Below is a list of data in the *roles* table.
+
+```{python}
+#| echo: false
+#| eval: true
+
+## Add code to list roles table here
+```
+
+
+## Sample queries
+
+Let's explore the database!
+
+# List skill names, tags, and descriptions ordered by name
+
+(here a sample query)
+
+```{python}
+sql = f"""
+select * from people
+"""
+```
+
+
+(and here is a sample result from the query)
+
+```{python}
+#| echo: false
+#| eval: true
+try:
+    df = pd.read_sql(sql,cnx)
+    df
+except Exception as e:
+    message = str(e)
+    print(f"An error occurred:\n\n{message}\n\nIgnoring and moving on.")
+    df = pd.DataFrame()
+df
+
+```
+
+
+### List people names and email addresses ordered by last_name
+
+
+### List skill names of Person 1
+
+
+### List people names with Skill 6
+
+
+### List people with a DEVELOPER role
+
+
+### List names and email addresses of people without skills
+
+
+### List names and tags of unused skills
+
+
+### List people names and skill names with the BOSS role
+
+
+### List ids and names of unused roles
+
+
+## Reflection
+
+(Write a paragraph expressing your thoughts, feelings, and insights about your experience with this assignment.  Pause and breath before writing - I'm trying to encourage critical thinking and self-awareness while allowing you to explore the connections between theory and practice. And yes, delete this paragraph.)
+
