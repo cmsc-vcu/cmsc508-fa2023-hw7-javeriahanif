@@ -1,0 +1,11 @@
+---
+title: Homework 7 - Creating a database using DDL
+author: Javeria Hanif
+date: Nov 7, 2023
+format:
+    gfm:
+        mermaid-format: png
+---
+## Homework Description
+
+Homework 7 is practice for creating databases, analyzing ER diagrams, and writing SQL queries. It involves creating tables, inserting columns and data, and practicing various SQL queries.
