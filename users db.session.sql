@@ -5,4 +5,3 @@ WHERE roles_id NOT IN (
     FROM peopleroles
 )
 
-

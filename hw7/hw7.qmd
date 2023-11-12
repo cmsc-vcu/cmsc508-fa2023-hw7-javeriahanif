@@ -94,21 +94,60 @@ This database project involves creating my own database with tables like **peopl
 
 ## Crows-foot diagram
 
-In this ER diagram, there is a 'Customer' entity with attributes such as id, first_name, and last_name. Another entity, 'Delivery-Address,' has an attribute called id. The 'Customer' entity has a one-to-many relationship with 'Order,' indicating that a Customer can place many Orders. Additionally, the 'Customer' entity has a one-to-one relationship with 'Delivery-Address,' suggesting that a Customer uses a single Delivery-Address.
+In the ER diagram below, 
+
+The relationship between SKILLS and PEOPLESKILLS is one-to-many relationship. It indicates that a skill in the SKILLS table can be associated with zero or many records in the PEOPLESKILLS table, while each record in the PEOPLESKILLS table corresponds to one SKILLS record. Same goes for PEOPLE and PEOPLESKILLS relationship. 
+
+There is a one-to-many relationship between the PEOPLE and PEOPLEROLES entities and ROLES and PEOPLEROLES entities. These relationships indicate that each person in the PEOPLE entity can have multiple roles in the PEOPLEROLES entity, and each role in the ROLES entity can be assigned to multiple people in the PEOPLEROLES entity.
 
 ```{mermaid}
 %%| echo: false
 erDiagram
-    CUSTOMER ||--o{ ORDER : places
-    CUSTOMER }|..|{ DELIVERY-ADDRESS : uses
-    CUSTOMER{
-        int id
-        string first_name
-        string last_name
-    }
-    DELIVERY-ADDRESS {
-        int id
-    }
+PEOPLE |o--|{ PEOPLESKILLS : P-PS
+SKILLS |o--|{  PEOPLESKILLS : S-PS
+PEOPLE ||--o{ PEOPLEROLES : P-PR
+ROLES ||--o{ PEOPLEROLES : S-PR
+
+PEOPLE{
+    int people_id PK
+    varchar first_name
+    varchar last_name
+    varchar email
+    varchar linkedin_url
+    varchar headshot_url
+    varchar discord_handle
+    varchar brief_bio
+    date date_joined
+}
+
+SKILLS{
+    int skills_id PK
+    varchar name
+    varchar description
+    varchar tag
+    varchar url
+    int time_commitment
+}
+
+ROLES{
+    int roles_id PK
+    varchar name
+    int sort_priority
+}
+
+PEOPLEROLES{
+    int id PK
+    int people_id FK
+    int roles_id FK
+    date date_assigned
+}
+
+PEOPLESKILLS{
+    int id PK
+    int people_id FK
+    int skills_id FK
+    date date_acquired
+}
 ```
 
 ## Examples of data in the database
